@@ -14,7 +14,7 @@
 
 #import "MOLCodesignChecker.h"
 
-#import <MOLCertificate/MOLCertificate.h>
+#import "MOLCertificate.h"
 #import <Security/Security.h>
 
 /**
