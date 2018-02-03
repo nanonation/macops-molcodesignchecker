@@ -145,8 +145,33 @@ static const SecCSFlags kSigningFlags = kSecCSDefaultFlags;
 }
 
 - (instancetype)initWithPID:(pid_t)pid {
+    NSError *error;
+    self = [self initWithPID:pid error:&error];
+    return (error) ? nil : self;
+}
+
+- (instancetype)initWithAuditSessionID:(au_asid_t)asid error:(NSError **)error {
+    OSStatus status = errSecSuccess;
+    SecCodeRef codeRef = NULL;
+    NSDictionary *attributes = @{ (__bridge NSString *)kSecGuestAttributeAudit : @(asid) };
+    
+    status = SecCodeCopyGuestWithAttributes(NULL, (__bridge CFDictionaryRef)attributes,
+                                            kSecCSDefaultFlags, &codeRef);
+    if (status != errSecSuccess) {
+        if (error) {
+            *error = [self errorWithCode:status];
+        }
+        return nil;
+    }
+    
+    self = [self initWithSecStaticCodeRef:(SecStaticCodeRef)codeRef error:error];
+    if (codeRef) CFRelease(codeRef);  // it was retained above
+    return self;
+}
+
+- (instancetype)initWithAuditSessionID:(au_asid_t)asid {
   NSError *error;
-  self = [self initWithPID:pid error:&error];
+  self = [self initWithAuditSessionID:asid error:&error];
   return (error) ? nil : self;
 }
 
