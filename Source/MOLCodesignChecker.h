@@ -123,21 +123,21 @@
 - (instancetype)initWithPID:(pid_t)pid;
 
 /**
- Initialize with a running binary using its "Audit Session" ID from an incoming NSXPCConnection.
+ Initialize with a running binary using its "Audit Token" from an incoming NSXPCConnection.
  
- @param asid PID of a running process.
+ @param auditToken of an incoming NSXPCConnection
  @param error NSError to be filled in if validation fails for any reason.
  @return An initialized `MOLCodesignChecker`.
  */
-- (instancetype)initWithAuditSessionID:(au_asid_t)asid error:(NSError **)error;
+- (instancetype)initWithAuditToken:(audit_token_t)auditToken error:(NSError **)error;
 
 /**
- Initialize with a running binary using its "Audit Session" ID from an incoming NSXPCConnection.
+ Initialize with a running binary using its "Audit Token" from an incoming NSXPCConnection.
  
- @param asid 'auditSessionIdentifier' of a incoming NSXPCConnection.
+ @param auditToken of an incoming NSXPCConnection
  @return An initialized `MOLCodesignChecker` or nil if validation failed.
  */
-- (instancetype)initWithAuditSessionID:(au_asid_t)asid;
+- (instancetype)initWithAuditToken:(audit_token_t)auditToken;
 
 /**
   Initialize with the currently running process.

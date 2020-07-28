@@ -150,10 +150,11 @@ static const SecCSFlags kSigningFlags = kSecCSDefaultFlags;
     return (error) ? nil : self;
 }
 
-- (instancetype)initWithAuditSessionID:(au_asid_t)asid error:(NSError **)error {
+- (instancetype)initWithAuditToken:(audit_token_t)auditToken error:(NSError **)error {
     OSStatus status = errSecSuccess;
     SecCodeRef codeRef = NULL;
-    NSDictionary *attributes = @{ (__bridge NSString *)kSecGuestAttributeAudit : @(asid) };
+    NSData* tokenData = [NSData dataWithBytes:&auditToken length:sizeof(audit_token_t)];
+    NSDictionary *attributes = @{ (__bridge NSString *)kSecGuestAttributeAudit : tokenData };
     
     status = SecCodeCopyGuestWithAttributes(NULL, (__bridge CFDictionaryRef)attributes,
                                             kSecCSDefaultFlags, &codeRef);
@@ -169,9 +170,9 @@ static const SecCSFlags kSigningFlags = kSecCSDefaultFlags;
     return self;
 }
 
-- (instancetype)initWithAuditSessionID:(au_asid_t)asid {
+- (instancetype)initWithAuditToken:(audit_token_t)token {
   NSError *error;
-  self = [self initWithAuditSessionID:asid error:&error];
+  self = [self initWithAuditToken:token error:&error];
   return (error) ? nil : self;
 }
 
